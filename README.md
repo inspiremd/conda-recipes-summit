@@ -18,6 +18,14 @@ conda install openmm
 ```
 
 
+## Building the packages
+```bash
+conda build --numpy 1.14 swig fftw3f
+CUDA_VERSION="9.2" CUDA_SHORT_VERSION="92" conda build --numpy 1.14 --python 3.6 openmm
+anaconda upload /gpfs/alpine/scratch/jchodera1/bip178/miniconda/conda-bld/linux-ppc64le/openmm-*
+```
+
+
 Notes:
 ```
 The following NEW packages will be INSTALLED:
