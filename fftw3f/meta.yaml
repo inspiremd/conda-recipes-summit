@@ -1,0 +1,18 @@
+package:
+  name: fftw3f
+  version: 3.3.4
+
+build:
+  number: 2
+
+source:
+  fn: fftw-3.3.4.tar.gz
+  url: http://www.fftw.org/fftw-3.3.4.tar.gz
+
+requirements:
+  build:
+    - {{ compiler('c') }}
+
+about:
+  home: http://www.fftw.org/
+  license: GPL
