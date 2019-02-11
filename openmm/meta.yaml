@@ -4,7 +4,7 @@ package:
 
 source:
   git_url: https://github.com/pandegroup/openmm.git
-  git_tag: master
+  git_tag: 81bad1b
 
   patches:
     - silent-cmake.patch
