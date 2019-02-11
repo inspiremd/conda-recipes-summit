@@ -6,7 +6,13 @@ Built packages are currently being pushed to the [omnia](https://anaconda.org/om
 
 ## Installing on Summit
 
-To use [`omnia` packages](http://www.omnia.md/install/):
+First, install `miniconda` from your `$MEMBER_WORK` directory (`/gpfs/alpine/scratch/$USER/$PROJECT/`):
+```bash
+wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-ppc64le.sh
+bash Miniconda3-latest-Linux-ppc64le.sh -b -p miniconda
+export PATH=$MEMBER_WORK/miniconda/bin:$PATH
+```
+The `ppc64le` packages have been uploaded to the [`omnia`](https://anaconda.org/omnia) and [`conda-forge`](https://anaconda.org/conda-forge) channels:
 ```bash
 # Add conda-forge and omnia to your channel list
 conda config --add channels omnia --add channels conda-forge
@@ -22,6 +28,11 @@ Currently, only the CUDA 9.2 build has been uploaded.
 
 ## Building the packages
 
+If you need to rebuild the packages from scratch, start an interactive job:
+```bash
+bsub -W 2:00 -nnodes 1 -P bip178 -Is /bin/bash
+```
+Then build the dependencies:
 ```bash
 # Build openmm dependencies not yet built for ppc64le by conda-forge
 conda build --numpy 1.14 swig fftw3f doxygen
@@ -38,3 +49,4 @@ anaconda upload -u omnia-dev -l main -l cuda92 /gpfs/alpine/scratch/jchodera1/bi
 ```
 
 See https://github.com/pandegroup/openmm/issues/2258 for more details.
+
