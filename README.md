@@ -16,7 +16,7 @@ conda update --yes --all
 The `openmm` packge is built from OpenMM development snapshot [`81bad1b`](https://github.com/pandegroup/openmm/tree/81bad1bc142d4b1fc286473528b454a3a8e26197) and uploaded to the [`omnia-dev`](https://anaconda.org/omnia-dev/openmm/files) channel:
 ```bash
 # Install the 'openmm' 7.4.0 dev package for ppc64le 
-conda install -c omnia-dev/label/cuda92 openmm
+conda install --yes -c omnia-dev/label/cuda92 openmm
 ```
 Currently, only the CUDA 9.2 build has been uploaded.
 
