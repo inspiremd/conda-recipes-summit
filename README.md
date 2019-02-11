@@ -4,6 +4,8 @@ These are conda recipes for manually creating ppc64le conda packages for package
 
 Built packages are currently being pushed to the [omnia](https://anaconda.org/omnia) conda channel.
 
+## Installing on Summit
+
 To use [`omnia` packages](http://www.omnia.md/install/):
 ```bash
 # Add conda-forge and omnia to your channel list
@@ -13,27 +15,22 @@ conda update --yes --all
 ```
 Then, for example, to install `openmm`:
 ```
-# Install the 'openmm' a package
-conda install openmm
+# Install the 'openmm' 7.4.0 dev package for ppc64le (built from [`81bad1b`](https://github.com/pandegroup/openmm/tree/81bad1bc142d4b1fc286473528b454a3a8e26197))
+conda install -c omnia-dev/label/cuda92 openmm
 ```
-
 
 ## Building the packages
+
 ```bash
-conda build --numpy 1.14 swig fftw3f
+# Build openmm dependencies not yet built for ppc64le by conda-forge
+conda build --numpy 1.14 swig fftw3f doxygen
+# Upload the to omnia
+anaconda upload -u omnia /gpfs/alpine/scratch/jchodera1/bip178/miniconda/conda-bld/linux-ppc64le/{swig,fftw,doxygen}*
+# Build OpenMM for cuda 9.2
+module unload cuda
+module load cuda/9.2
 CUDA_VERSION="9.2" CUDA_SHORT_VERSION="92" conda build --numpy 1.14 --python 3.6 openmm
-anaconda upload /gpfs/alpine/scratch/jchodera1/bip178/miniconda/conda-bld/linux-ppc64le/openmm-*
-```
-
-
-Notes:
-```
-The following NEW packages will be INSTALLED:
-
-    binutils_impl_linux-ppc64le: 2.31.1-he53550c_1
-    binutils_linux-ppc64le:      2.31.1-he53550c_3
-    gcc_impl_linux-ppc64le:      8.2.0-he01c8ba_1 
-    gcc_linux-ppc64le:           8.2.0-h9f3bcec_3 
-    libgcc-ng:                   8.2.0-h822a55f_1 
-    libstdcxx-ng:                8.2.0-h822a55f_1 
+CUDA_VERSION="9.2" CUDA_SHORT_VERSION="92" conda build --numpy 1.14 --python 3.7 openmm
+# Upload OpenMM packages to conda-dev under desired labels
+anaconda upload -u omnia-dev -l main -l cuda92 /gpfs/alpine/scratch/jchodera1/bip178/miniconda/conda-bld/linux-ppc64le/openmm-*
 ```
