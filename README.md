@@ -14,7 +14,7 @@ conda config --add channels omnia --add channels conda-forge
 conda update --yes --all
 ```
 Then, for example, to install `openmm`:
-```
+```bash
 # Install the 'openmm' 7.4.0 dev package for ppc64le (built from [`81bad1b`](https://github.com/pandegroup/openmm/tree/81bad1bc142d4b1fc286473528b454a3a8e26197))
 conda install -c omnia-dev/label/cuda92 openmm
 ```
@@ -28,9 +28,12 @@ conda build --numpy 1.14 swig fftw3f doxygen
 anaconda upload -u omnia /gpfs/alpine/scratch/jchodera1/bip178/miniconda/conda-bld/linux-ppc64le/{swig,fftw,doxygen}*
 # Build OpenMM for cuda 9.2
 module unload cuda
-module load cuda/9.2
+module load cuda/9.2.148
+CUDA_VERSION="9.2" CUDA_SHORT_VERSION="92" conda build --numpy 1.14 --python 2.7 openmm
 CUDA_VERSION="9.2" CUDA_SHORT_VERSION="92" conda build --numpy 1.14 --python 3.6 openmm
 CUDA_VERSION="9.2" CUDA_SHORT_VERSION="92" conda build --numpy 1.14 --python 3.7 openmm
 # Upload OpenMM packages to conda-dev under desired labels
 anaconda upload -u omnia-dev -l main -l cuda92 /gpfs/alpine/scratch/jchodera1/bip178/miniconda/conda-bld/linux-ppc64le/openmm-*
 ```
+
+See https://github.com/pandegroup/openmm/issues/2258 for more details.

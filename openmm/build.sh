@@ -1,4 +1,4 @@
-CMAKE_FLAGS="-DCMAKE_INSTALL_PREFIX=$PREFIX -DBUILD_TESTING=OFF"
+CMAKE_FLAGS="-DCMAKE_INSTALL_PREFIX=$PREFIX -DBUILD_TESTING=OFF -DOPENMM_BUILD_CUDA_TESTS=OFF"
 
 # Ensure we build a release
 CMAKE_FLAGS+=" -DCMAKE_BUILD_TYPE=Release"
@@ -16,16 +16,30 @@ if [[ "$OSTYPE" == "linux-gnu" ]]; then
 
     # Hack to work around path issues
     #cp $PREFIX/../_build_env/lib/libfftw3f*.so $PREFIX/lib
-    CMAKE_FLAGS+=" -DCMAKE_LIBRARY_PATH=$PREFIX/../lib"
+    CMAKE_FLAGS+=" -DCMAKE_LIBRARY_PATH=$PREFIX/../lib:/usr/lib64"
 
     # CFLAGS
     #export MINIMAL_CFLAGS="-g -O3 -I$PREFIX/../_build_env/include/ -L$PREFIX/../_build_env/lib"
-    export MINIMAL_CFLAGS="-g -O3 -I$BUILD_PREFIX/include/ -L$BUILD_PREFIX/lib"
+    #export MINIMAL_CFLAGS="-g -O3 -I$BUILD_PREFIX/include/ -L$BUILD_PREFIX/lib -L/usr/lib64 -L/usr/lib64/nvidia"
+    #CMAKE_FLAGS+=" -DCMAKE_CXX_LINK_FLAGS=-Wl,-rpath=/usr/lib64:/usr/lib64/nvidia"
+
+    #export MINIMAL_CFLAGS="-g -O3 -I$BUILD_PREFIX/include/ -L$BUILD_PREFIX/lib"
+    export MINIMAL_CFLAGS="-g -O3 -I$BUILD_PREFIX/include/ -L$BUILD_PREFIX/lib -L/usr/lib64 -L/usr/lib64/nvidia"
     export CFLAGS="$MINIMAL_CFLAGS"
     export CXXFLAGS="$MINIMAL_CFLAGS"
     export LDFLAGS="$LDPATHFLAGS"
 
-    CMAKE_FLAGS+=" -DCMAKE_C_COMPILER=gcc -DCMAKE_CXX_COMPILER=g++"
+    export LD_LIBRARY_PATH="/usr/lib64:/usr/lib64/nvidia:$LD_LIBRARY_PATH"
+
+    echo `$CC --version`
+    echo `$CXX --version`
+    #export CC="$BUILD_PREFIX/bin/powerpc64le-conda_cos7-linux-gnu-gcc"
+    #export CXX="$BUILD_PREFIX/bin/powerpc64le-conda_cos7-linux-gnu-g++"
+    CMAKE_FLAGS+=" -DCMAKE_C_COMPILER=$CC -DCMAKE_CXX_COMPILER=$CXX"
+    CMAKE_FLAGS+=" -DCMAKE_C_COMPILER_AR=$BUILD_PREFIX/bin/powerpc64le-conda_cos7-linux-gnu-ar"
+    CMAKE_FLAGS+=" -DCMAKE_C_COMPILER_RANLIB=$BUILD_PREFIX/bin/powerpc64le-conda_cos7-linux-gnu-ranlib"
+    CMAKE_FLAGS+=" -DCMAKE_CXX_COMPILER_AR=$BUILD_PREFIX/bin/powerpc64le-conda_cos7-linux-gnu-ar"
+    CMAKE_FLAGS+=" -DCMAKE_CXX_COMPILER_RANLIB=$BUILD_PREFIX/bin/powerpc64le-conda_cos7-linux-gnu-ranlib"
 
     # OpenMM build configuration
     #CUDA_PATH="/usr/local/cuda"

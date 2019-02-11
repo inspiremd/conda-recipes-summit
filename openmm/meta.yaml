@@ -7,7 +7,7 @@ source:
   git_tag: 81bad1b
 
   patches:
-    - silent-cmake.patch
+    #- silent-cmake.patch
     - silent-doxygen.patch
     - silent-latexpdf.patch
 
