@@ -29,6 +29,7 @@ build:
 requirements:
   build:
     - {{ compiler('c') }}
+    - {{ compiler('cxx') }}
     # on windows, need to install cmake manually
     - cmake     [not win]
     - jom       [win]

@@ -78,7 +78,14 @@ make -j$CPU_COUNT all
 #export LDFLAGS="$LDPATHFLAGS"
 #export SHLIB_LDFLAGS="$LDPATHFLAGS"
 
-make -j$CPU_COUNT install PythonInstall
+#make -j$CPU_COUNT install PythonInstall
+
+make -j$CPU_COUNT install 
+export OPENMM_INCLUDE_PATH=$PREFIX/include
+export OPENMM_LIB_PATH=$PREFIX/lib
+cd python
+python setup.py build
+python setup.py install --prefix=$PREFIX
 
 # Clean up paths for API docs.
 #mkdir openmm-docs
