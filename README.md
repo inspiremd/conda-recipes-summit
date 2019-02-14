@@ -12,7 +12,9 @@ First, install `miniconda` from your `$MEMBER_WORK` directory (`/gpfs/alpine/scr
 ```bash
 wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-ppc64le.sh
 bash Miniconda3-latest-Linux-ppc64le.sh -b -p miniconda
-export PATH=$MEMBER_WORK/miniconda/bin:$PATH
+# Make sure to add these lines to your ~/.bash_profile
+export MINICONDA=$MEMBER_WORK/miniconda
+export PATH=$MINICONDA/bin:$PATH
 ```
 The `ppc64le` packages have been uploaded to the [`omnia`](https://anaconda.org/omnia) and [`conda-forge`](https://anaconda.org/conda-forge) channels:
 ```bash
@@ -27,6 +29,31 @@ The `openmm` packge is built from OpenMM development snapshot [`81bad1b`](https:
 conda install --yes -c omnia-dev/label/cuda92 openmm
 ```
 Currently, only the CUDA 9.2 build has been uploaded.
+
+## Testing openmm
+
+```bash
+# Log into a batch node
+bsub -W 2:00 -nnodes 1 -P bip178 -alloc_flags gpudefault -Is /bin/bash
+
+# Install the CUDA and appropriate MPI modules:
+module add cuda/9.2.148 gcc/8.1.1 spectrum-mpi/10.2.0.10-20181214
+
+# Run the benchmark via jsrun requesting
+# one resource set (-n 1), one MPI process (-a 1), one core (-c 1), one GPU (-g 1)
+cd $MINICONDA/share/openmm/examples
+jsrun --smpiargs="none" -n 1 -a 1 -c 1 -g 1 python benchmark.py --platform=CUDA --test=pme --precision=mixed --seconds=30 --heavy-hydrogens
+```
+I see the following benchmarks on Summit:
+```
+Platform: CUDA
+Precision: mixed
+
+Test: pme (cutoff=0.9)
+Step Size: 5 fs
+Integrated 48894 steps in 28.5644 seconds
+739.46 ns/day
+```
 
 ## Building the packages
 
