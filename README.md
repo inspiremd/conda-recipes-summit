@@ -6,7 +6,7 @@ Built packages are currently being pushed to the [omnia](https://anaconda.org/om
 
 ## Installing on Summit
 
-If you need help setting up your `~/.bash_profile`, see [these notes](https://github.com/inspiremd/HOWTO/blob/master/Running\%20YANK\%20on\%20summit.md).
+If you need help setting up your `~/.bash_profile`, see [these notes](https://github.com/inspiremd/HOWTO/blob/master/Running%20YANK%20on%20summit.md).
 
 First, install `miniconda` from your `$MEMBER_WORK` directory (`/gpfs/alpine/scratch/$USER/$PROJECT/`):
 ```bash
