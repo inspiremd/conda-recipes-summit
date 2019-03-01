@@ -37,9 +37,10 @@ bsub -W 2:00 -nnodes 1 -P bip178 -Is /bin/bash
 Then build the dependencies:
 ```bash
 # Build openmm dependencies not yet built for ppc64le by conda-forge
-conda build --numpy 1.14 swig fftw3f doxygen
+conda build --numpy 1.14 --python 3.6 swig fftw3f doxygen pymbar parmed
+conda build --numpy 1.14 --python 3.7 swig fftw3f doxygen pymbar parmed
 # Upload the to omnia
-anaconda upload -u omnia /gpfs/alpine/scratch/jchodera1/bip178/miniconda/conda-bld/linux-ppc64le/{swig,fftw,doxygen}*
+anaconda upload -u omnia /gpfs/alpine/scratch/jchodera1/bip178/miniconda/conda-bld/linux-ppc64le/{swig,fftw,doxygen,pymbar}*
 # Build OpenMM for cuda 9.2
 module unload cuda
 module load cuda/9.2.148
