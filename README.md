@@ -39,6 +39,11 @@ Currently, CUDA 9.2 and 10.1 builds have been uploaded.
 # Log into a batch node
 bsub -W 2:00 -nnodes 1 -P bip178 -alloc_flags gpudefault -Is /bin/bash
 
+# Make sure to activate conda environment
+# TODO: Is there a way we can make sure the `~/.bash_profile` is executed on log in?
+source ~/.bash_profile
+conda activate
+
 # Install the CUDA and appropriate MPI modules:
 module unload cuda
 module load cuda/10.1.105 gcc/8.1.1 spectrum-mpi/10.2.0.10-20181214
