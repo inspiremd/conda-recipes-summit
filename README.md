@@ -67,7 +67,7 @@ bsub -W 2:00 -nnodes 1 -P bip178 -Is /bin/bash
 ```
 Install `conda-build`:
 ```bash
-conda install --yes conda-build conda-verify
+conda install --yes conda-build conda-verify anaconda-client
 ```
 Then build the dependencies:
 ```bash
@@ -77,9 +77,11 @@ conda build --numpy 1.14 --python 3.7 swig fftw3f doxygen pymbar parmed
 # Upload the to omnia
 anaconda upload -u omnia /gpfs/alpine/scratch/jchodera1/bip178/miniconda/conda-bld/linux-ppc64le/{swig,fftw,doxygen,pymbar}*
 
+# Clean up
+conda clean -tipsy
+
 # Build OpenMM for cuda 9.2
 module unload cuda
-module add cudatoolkit/9.1.85_3.10-1.0502.df1cc54.3.1
 module load cuda/9.2.148
 CUDA_VERSION="9.2" CUDA_SHORT_VERSION="92" conda build --numpy 1.14 --python 2.7 openmm
 CUDA_VERSION="9.2" CUDA_SHORT_VERSION="92" conda build --numpy 1.14 --python 3.6 openmm
@@ -87,7 +89,7 @@ CUDA_VERSION="9.2" CUDA_SHORT_VERSION="92" conda build --numpy 1.14 --python 3.7
 # Upload OpenMM packages to conda-dev under desired labels
 anaconda upload -u omnia-dev --force -l main -l cuda92 /gpfs/alpine/scratch/jchodera1/bip178/miniconda/conda-bld/linux-ppc64le/openmm-*
 
-# clean up
+# Clean up
 conda clean -tipsy
 
 # Build OpenMM for cuda 10.1
