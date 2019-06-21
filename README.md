@@ -76,6 +76,17 @@ CUDA_VERSION="9.2" CUDA_SHORT_VERSION="92" conda build --numpy 1.14 --python 3.6
 CUDA_VERSION="9.2" CUDA_SHORT_VERSION="92" conda build --numpy 1.14 --python 3.7 openmm
 # Upload OpenMM packages to conda-dev under desired labels
 anaconda upload -u omnia-dev -l main -l cuda92 /gpfs/alpine/scratch/jchodera1/bip178/miniconda/conda-bld/linux-ppc64le/openmm-*
+
+# clean up
+conda clean -tipsy
+
+# Build OpenMM for cuda 10.1
+module unload cuda
+module load cuda/10.1.105
+CUDA_VERSION="10.1" CUDA_SHORT_VERSION="101" conda build --numpy 1.14 --python 2.7 openmm
+CUDA_VERSION="10.1" CUDA_SHORT_VERSION="101" conda build --numpy 1.14 --python 3.6 openmm
+CUDA_VERSION="10.1" CUDA_SHORT_VERSION="101" conda build --numpy 1.14 --python 3.7 openmm
+anaconda upload -u omnia-dev -l cuda101 /gpfs/alpine/scratch/jchodera1/bip178/miniconda/conda-bld/linux-ppc64le/openmm-*
 ```
 
 See https://github.com/pandegroup/openmm/issues/2258 for more details.
