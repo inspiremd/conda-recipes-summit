@@ -1,10 +1,12 @@
+{% set build_num = "0" %}
+
 package:
   name: openmm
   version: 7.4.0
 
 source:
   git_url: https://github.com/pandegroup/openmm.git
-  git_tag: 81bad1b
+  git_tag: 6e073b4
 
   patches:
     #- silent-cmake.patch
@@ -16,10 +18,10 @@ extra:
   force_upload: False
 
 build:
-  number: 0
+  number: {{ build_num }}
   skip: True # [win]
   detect_binary_files_with_prefix: False
-  string: py{{py}}_cuda{{ CUDA_SHORT_VERSION }}_rc_1
+  string: py{{ py }}_cuda{{ CUDA_SHORT_VERSION }}_{{ build_num }}
   # Inherit the following environment variables in build.sh call
   script_env:
    - CUDA_VERSION
