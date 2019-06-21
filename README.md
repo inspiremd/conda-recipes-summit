@@ -12,9 +12,8 @@ First, install `miniconda` from your `$MEMBER_WORK` directory (`/gpfs/alpine/scr
 ```bash
 wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-ppc64le.sh
 bash Miniconda3-latest-Linux-ppc64le.sh -b -p miniconda
-# Make sure to add these lines to your ~/.bash_profile
-export MINICONDA=$MEMBER_WORK/miniconda
-export PATH=$MINICONDA/bin:$PATH
+# Initialize your ~/.bash_profile
+conda init bash
 ```
 The `ppc64le` packages have been uploaded to the [`omnia`](https://anaconda.org/omnia) and [`conda-forge`](https://anaconda.org/conda-forge) channels:
 ```bash
@@ -23,12 +22,16 @@ conda config --add channels omnia --add channels conda-forge
 # Update to conda-forge versions of packages
 conda update --yes --all
 ```
-The `openmm` packge is built from OpenMM development snapshot [`81bad1b`](https://github.com/pandegroup/openmm/tree/81bad1bc142d4b1fc286473528b454a3a8e26197) and uploaded to the [`omnia-dev`](https://anaconda.org/omnia-dev/openmm/files) channel:
+The `openmm` packge is built from OpenMM development snapshot [`6e073b4`](https://github.com/pandegroup/openmm/commit/6e073b48b22d7f5e5b45b8668c61e67f46591a0c) and uploaded to the [`omnia-dev`](https://anaconda.org/omnia-dev/openmm/files) channel:
 ```bash
-# Install the 'openmm' 7.4.0 dev package for ppc64le 
-conda install --yes -c omnia-dev/label/cuda92 openmm
+# Create a new environment named 'openmm'
+conda create -n openmm python==3.7
+# Activate it
+conda activate openmm
+# Install the 'openmm' 7.4.0 dev package for ppc64le into this environment
+conda install --yes -c omnia-dev/label/cuda101 openmm
 ```
-Currently, only the CUDA 9.2 build has been uploaded.
+Currently, CUDA 9.2 and 10.1 builds have been uploaded.
 
 ## Testing openmm
 
@@ -37,7 +40,8 @@ Currently, only the CUDA 9.2 build has been uploaded.
 bsub -W 2:00 -nnodes 1 -P bip178 -alloc_flags gpudefault -Is /bin/bash
 
 # Install the CUDA and appropriate MPI modules:
-module add cuda/9.2.148 gcc/8.1.1 spectrum-mpi/10.2.0.10-20181214
+module unload cuda
+module load cuda/10.1.105 gcc/8.1.1 spectrum-mpi/10.2.0.10-20181214
 
 # Run the benchmark via jsrun requesting
 # one resource set (-n 1), one MPI process (-a 1), one core (-c 1), one GPU (-g 1)
@@ -61,6 +65,10 @@ If you need to rebuild the packages from scratch, start an interactive job:
 ```bash
 bsub -W 2:00 -nnodes 1 -P bip178 -Is /bin/bash
 ```
+Install `conda-build`:
+```bash
+conda install --yes conda-build conda-verify
+```
 Then build the dependencies:
 ```bash
 # Build openmm dependencies not yet built for ppc64le by conda-forge
@@ -68,14 +76,16 @@ conda build --numpy 1.14 --python 3.6 swig fftw3f doxygen pymbar parmed
 conda build --numpy 1.14 --python 3.7 swig fftw3f doxygen pymbar parmed
 # Upload the to omnia
 anaconda upload -u omnia /gpfs/alpine/scratch/jchodera1/bip178/miniconda/conda-bld/linux-ppc64le/{swig,fftw,doxygen,pymbar}*
+
 # Build OpenMM for cuda 9.2
 module unload cuda
+module add cudatoolkit/9.1.85_3.10-1.0502.df1cc54.3.1
 module load cuda/9.2.148
 CUDA_VERSION="9.2" CUDA_SHORT_VERSION="92" conda build --numpy 1.14 --python 2.7 openmm
 CUDA_VERSION="9.2" CUDA_SHORT_VERSION="92" conda build --numpy 1.14 --python 3.6 openmm
 CUDA_VERSION="9.2" CUDA_SHORT_VERSION="92" conda build --numpy 1.14 --python 3.7 openmm
 # Upload OpenMM packages to conda-dev under desired labels
-anaconda upload -u omnia-dev -l main -l cuda92 /gpfs/alpine/scratch/jchodera1/bip178/miniconda/conda-bld/linux-ppc64le/openmm-*
+anaconda upload -u omnia-dev --force -l main -l cuda92 /gpfs/alpine/scratch/jchodera1/bip178/miniconda/conda-bld/linux-ppc64le/openmm-*
 
 # clean up
 conda clean -tipsy
@@ -86,7 +96,7 @@ module load cuda/10.1.105
 CUDA_VERSION="10.1" CUDA_SHORT_VERSION="101" conda build --numpy 1.14 --python 2.7 openmm
 CUDA_VERSION="10.1" CUDA_SHORT_VERSION="101" conda build --numpy 1.14 --python 3.6 openmm
 CUDA_VERSION="10.1" CUDA_SHORT_VERSION="101" conda build --numpy 1.14 --python 3.7 openmm
-anaconda upload -u omnia-dev -l cuda101 /gpfs/alpine/scratch/jchodera1/bip178/miniconda/conda-bld/linux-ppc64le/openmm-*
+anaconda upload -u omnia-dev --force -l cuda101 /gpfs/alpine/scratch/jchodera1/bip178/miniconda/conda-bld/linux-ppc64le/openmm-*
 ```
 
 See https://github.com/pandegroup/openmm/issues/2258 for more details.
