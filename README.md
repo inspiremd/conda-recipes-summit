@@ -22,7 +22,7 @@ conda config --add channels omnia --add channels conda-forge
 # Update to conda-forge versions of packages
 conda update --yes --all
 ```
-The `openmm` packge is built from OpenMM development snapshot [`6e073b4`](https://github.com/pandegroup/openmm/commit/6e073b48b22d7f5e5b45b8668c61e67f46591a0c) and uploaded to the [`omnia-dev`](https://anaconda.org/omnia-dev/openmm/files) channel:
+The `openmm` packge is built from OpenMM development snapshot [`d5905f8`](https://github.com/pandegroup/openmm/commit/d5905f8) and uploaded to the [`omnia-dev`](https://anaconda.org/omnia-dev/openmm/files) channel:
 ```bash
 # Create a new environment named 'openmm'
 conda create -n openmm python==3.7
@@ -68,7 +68,9 @@ Integrated 48894 steps in 28.5644 seconds
 
 If you need to rebuild the packages from scratch, start an interactive job:
 ```bash
-bsub -W 2:00 -nnodes 1 -P bip178 -Is /bin/bash
+bsub -W 2:00 -nnodes 1 -P bip178 -alloc_flags gpudefault -Is /bin/bash
+source ~/.bash_profile # TODO: Can we get this to automatically execute when bash starts?
+conda activate
 ```
 Install `conda-build`:
 ```bash
