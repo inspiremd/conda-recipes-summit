@@ -86,6 +86,7 @@ anaconda upload -u omnia /gpfs/alpine/scratch/jchodera1/bip178/miniconda/conda-b
 
 # Clean up
 conda clean -tipsy
+conda build purge-all --yes
 
 # Build OpenMM for cuda 9.2
 module unload cuda
@@ -98,6 +99,7 @@ anaconda upload -u omnia-dev --force -l main -l cuda92 /gpfs/alpine/scratch/jcho
 
 # Clean up
 conda clean -tipsy
+conda build purge-all --yes
 
 # Build OpenMM for cuda 10.1
 module unload cuda
